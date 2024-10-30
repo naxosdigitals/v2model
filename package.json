@@ -9,10 +9,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.7.2",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "eventsource-parser": "^2.0.1",
     "node-fetch": "^3.3.2"

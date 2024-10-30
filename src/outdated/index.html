@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Chat Widget</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body style="margin: 0;">
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="input-container">
+          <input id="message-input" type="text" placeholder="Type a message...">
+          <button id="send-button" onclick="sendMessage()">
+            <i class="fas fa-arrow-up"></i>
+          </button>
+        </div>
+      </div>
+
+      <script>
+        const messagesDiv = document.getElementById("messages");
+        let isProcessing = false;
+
+        document.getElementById("message-input").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    sendMessage();
+    input.value = ""; // Clear the input field after sending the message
+    sendButton.style.display = "none"; // Hide the send button
+  }
+});
+
+        const input = document.getElementById("message-input");
+const sendButton = document.getElementById("send-button");
+
+// Listen for input changes in the message input field
+input.addEventListener("input", () => {
+  if (input.value.trim() !== "") {
+    sendButton.style.display = "flex"; // Show button when there’s text
+  } else {
+    sendButton.style.display = "none"; // Hide button when input is empty
+  }
+});
+
+// Initial check to hide the button if the input is empty on page load
+if (input.value.trim() === "") {
+  sendButton.style.display = "none";
+}
+
+import { formatText } from './formatting.js';
+
+async function sendMessage() {
+  const userMessage = input.value.trim();
+  if (!userMessage) return;
+
+  // Display user's message in the chat
+  displayMessage(userMessage, "user-message");
+
+  // Clear the input field and hide the send button
+  input.value = ""; // Clear the input after sending
+  sendButton.style.display = "none";
+
+  // Create a placeholder for the typing animation
+  const typingIndicator = document.createElement("div");
+  typingIndicator.className = "message bot-message typing-indicator";
+  typingIndicator.innerHTML = "<span></span><span></span><span></span>";
+  messagesDiv.appendChild(typingIndicator);
+
+  let botMessage = ""; // Initialize bot message
+  try {
+    const response = await fetch("http://localhost:3002/api/message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userMessage })
+    });
+
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error("Failed to receive a response.");
+
+    const decoder = new TextDecoder("utf-8");
+
+    // Read the streamed response chunks
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      // Decode the chunk and append it to the bot's message
+      botMessage += decoder.decode(value, { stream: true });
+      
+      // Apply formatting to each chunk as it arrives
+      const formattedMessage = botMessage.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      typingIndicator.innerHTML = formattedMessage; // Update typing indicator with formatted text
+
+      // Auto-scroll to the latest message
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    typingIndicator.innerHTML = "Error: Unable to process message.";
+  }
+
+  // Remove the typing indicator once the response is complete
+  typingIndicator.remove();
+
+  // Display the final formatted bot message without additional formatting
+  displayMessage(botMessage, "bot-message");
+}
+
+
+
+        function displayMessage(text, className) {
+  console.log("displayMessage called with text:", text, "and className:", className); // Confirm function call
+  
+  let formattedText = text;
+
+  // Only apply formatting if it’s a bot message
+  if (className === "bot-message") {
+    formattedText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    console.log("Original Bot Text:", text);           // Log original bot text
+    console.log("Formatted Bot Text:", formattedText); // Log transformed bot text with <strong> tags
+  }
+
+  const messageDiv = document.createElement("div");
+  messageDiv.className = `message ${className}`;
+  
+  // Use innerHTML to apply formatting
+  messageDiv.innerHTML = formattedText;
+  
+  messagesDiv.appendChild(messageDiv);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to the latest message
+}
+
+
+
+
+
+
+
+      </script>
+</body>
+</html>

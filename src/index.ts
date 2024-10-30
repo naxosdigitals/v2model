@@ -1,19 +1,29 @@
-import * as readline from "readline";
 import dotenv from "dotenv";
 import fetch from "node-fetch";
-import { createParser } from "eventsource-parser";
+import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
+import cors from "cors";
+import express, { Request, Response } from "express";
 
-// import environment variables
 dotenv.config();
 
-async function callApi(action: { type: string; payload: any }): Promise<void> {
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+interface Action {
+  type: string;
+  payload: any;
+}
+
+// Modify the callApi function to accept runtime endpoint dynamically
+async function callApi(action: Action, res: Response, userId: string, projectId: string) {
   const queryParams = new URLSearchParams({
     completion_events: "true",
     ...(process.env.ENVIRONMENT && { environment: process.env.ENVIRONMENT }),
   });
 
   const response = await fetch(
-    `${process.env.RUNTIME_ENDPOINT}/v2/project/${process.env.PROJECT_ID}/user/test_user_123/interact/stream?${queryParams}`,
+    `${process.env.RUNTIME_ENDPOINT}/v2/project/${projectId}/user/${userId}/interact/stream?${queryParams}`,
     {
       method: "POST",
       headers: {
@@ -28,65 +38,46 @@ async function callApi(action: { type: string; payload: any }): Promise<void> {
     throw new Error(`API failed ${response.status} ${await response.text()}`);
   }
 
-  const parser = createParser((event) => {
-    if (event.type === "event" && event.event === "trace") {
+  const parser = createParser((event: ParsedEvent | ReconnectInterval) => {
+    if ("data" in event) {
       const trace = JSON.parse(event.data);
       switch (trace.type) {
         case "speak":
-          console.log(trace.payload.message);
-          break;
         case "text":
-          console.log(trace.payload.message);
+          res.write(trace.payload.message);
           break;
         case "completion":
           if (trace.payload.state === "content") {
-            process.stdout.write(trace.payload.content);
-          } else if (trace.payload.state === "end") {
-            process.stdout.write("\n");
+            res.write(trace.payload.content);
           }
           break;
-        case "end":
-          console.log("[conversation ended]");
-          process.exit(0);
       }
     }
   });
 
-  return new Promise((resolve, reject) => {
-    response.body!.on("data", (chunk) => {
-      parser.feed(chunk.toString());
-    });
+  response.body!.on("data", (chunk: Buffer) => {
+    parser.feed(chunk.toString());
+  });
 
-    response.body!.on("end", resolve);
-    response.body!.on("error", reject);
+  response.body!.on("end", () => {
+    res.end(); // End the response when the stream completes
   });
 }
 
-// CLI interface
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  prompt: "> ",
-});
+// API route for frontend communication with streaming support
+app.post("/api/message", async (req: Request, res: Response) => {
+  const { message, userId, projectId } = req.body; // Accept userId and projectId from the request body
 
-rl.on("line", (line) => {
-  const userMessage = line.trim();
-  if (!userMessage.length) {
-    rl.prompt();
-    return;
+  try {
+    res.setHeader("Content-Type", "text/plain"); // Set content type to stream text
+    await callApi({ type: "text", payload: message }, res, userId, projectId); // Pass userId and projectId
+  } catch (error) {
+    console.error("Error processing message:", error);
+    res.status(500).json({ error: "Error processing message" });
   }
-
-  callApi({ type: "text", payload: userMessage })
-    .catch((error) => {
-      console.error("Error:", error);
-    })
-    .finally(() => {
-      rl.prompt();
-    });
 });
 
-// start the conversation by sending a launch event
-(async () => {
-  await callApi({ type: "launch", payload: {} });
-  rl.prompt();
-})();
+const PORT = process.env.PORT || 3002;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
