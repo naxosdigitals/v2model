@@ -7,43 +7,18 @@ import express, { Request, Response } from "express";
 dotenv.config();
 
 const app = express();
-const allowedOrigins = ['https://naxosdigitals.github.io', 'https://canopy.school', 'http://localhost:5501'];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-
-// Handle preflight requests
-app.options('*', cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-
-// Other middleware and routes
+app.use(cors());
 app.use(express.json());
-
+app.use((req, res, next) => {
+  res.setTimeout(5 * 60 * 1000);  // Set timeout to 5 minutes
+  next();
+});
 interface Action {
   type: string;
   payload: any;
 }
 
+// Modify the callApi function to accept runtime endpoint dynamically
 async function callApi(action: Action, res: Response, userId: string, projectId: string) {
   const queryParams = new URLSearchParams({
     completion_events: "true",

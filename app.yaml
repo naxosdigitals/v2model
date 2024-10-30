@@ -1,9 +1,11 @@
-runtime: nodejs18  # Adjust this based on your Node.js version
-service: default
+runtime: nodejs18
+env: standard
+entrypoint: node dist/index.js
 
+# Optional: Configure environment variables here if not using app.yaml for them
 env_variables:
   RUNTIME_ENDPOINT: "https://general-runtime.voiceflow.com"
   PROJECT_ID: "670051167305f4f9dfa409a7"
   API_KEY: "VF.DM.6704fc2164e59b16e562f2fa.QuN1SiPca01zgeS6"
   ENVIRONMENT: "production"
-  ALLOWED_ORIGINS: "https://canopy.school,http://localhost"
+  ALLOWED_ORIGINS: "https://canopy.school,http://localhost:5501,https://naxosdigitals.github.io"

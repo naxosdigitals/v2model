@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "tsc"
+    "start": "node dist/index.js",       
+    "dev": "tsx index.ts",               
+    "build": "tsc"                       
   },
   "license": "MIT",
   "devDependencies": {
@@ -20,8 +21,7 @@
     "dotenv": "^16.4.5",
     "eventsource-parser": "^2.0.1",
     "express": "^4.21.1",
-    "node-fetch": "^3.3.2",
-    "tsx": "^4.19.1"
+    "node-fetch": "^3.3.2"
   },
   "type": "module"
 }
