@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "start": "tsx index.ts",
+    "start": "node dist/index.js",
     "build": "tsc"
   },
   "license": "MIT",
@@ -20,7 +20,8 @@
     "dotenv": "^16.4.5",
     "eventsource-parser": "^2.0.1",
     "express": "^4.21.1",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "tsx": "^4.19.1"
   },
   "type": "module"
 }

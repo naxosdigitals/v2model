@@ -1,6 +1,6 @@
 // config.js
 export const config = {
-    fetchurl: 'https://naxosai-7461a.uc.r.appspot.com/',
+    fetchurl: 'https://naxosai-7461a.uc.r.appspot.com/api/message',
     origin: 'localhost',
     projectid: '670051167305f4f9dfa409a7'
   };
