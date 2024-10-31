@@ -3,6 +3,9 @@
 // Function to apply text formatting, such as bold, italics, headings, code blocks, and links
 export function formatText(text) {
     let formattedText = text;
+    
+    const imageRegex = /(https?:\/\/(?:firebasestorage\.googleapis\.com\/\S+alt=media\S*|\S+\.(?:jpg|jpeg|png|gif)))/gi;
+    formattedText = formattedText.replace(imageRegex, (url) => `<img src="${url}" alt="Image" style="max-width: 100%; height: auto;" />`);
 
     // Apply **bold** formatting
     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -34,9 +37,7 @@ export function formatText(text) {
 
     // Detect plain URLs and make them clickable, avoiding duplicates
     formattedText = formattedText.replace(/(^|[^"'>])((https?:\/\/[^\s]+))/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
-    const imageRegex = /(https?:\/\/(?:firebasestorage\.googleapis\.com\/\S+alt=media\S*|\S+\.(?:jpg|jpeg|png|gif)))/gi;
-    formattedText = formattedText.replace(imageRegex, (url) => `<img src="${url}" alt="Image" style="max-width: 100%; height: auto;" />`);
-
+    
 
     return formattedText;
 }
