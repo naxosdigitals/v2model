@@ -4,7 +4,7 @@
 export function formatText(text) {
     let formattedText = text;
 
-    const imageRegex = /(https?:\/\/\S+\.(?:jpg|jpeg|png|gif))/gi;
+     const imageRegex = /(https?:\/\/(?:firebasestorage\.googleapis\.com\/\S+alt=media\S*|\S+\.(?:jpg|jpeg|png|gif)))/gi;
     formattedText = formattedText.replace(imageRegex, (url) => `<img src="${url}" alt="Image" style="max-width: 100%; height: auto;" />`);
 
     // Apply **bold** formatting
