@@ -9,10 +9,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
-  res.setTimeout(5 * 60 * 1000);  // Set timeout to 5 minutes
-  next();
-});
+
 interface Action {
   type: string;
   payload: any;
