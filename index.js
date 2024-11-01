@@ -7,7 +7,7 @@ const input = document.getElementById("message-input");
 const sendButton = document.getElementById("send-button");
 
 // Initialize userId variable
-let userId = "1234"; // Default value if not received from the parent
+let userId = generateRandomUserId(); // Default value if not received from the parent
 
 const currentProjectId = localStorage.getItem('currentProjectId'); // Adjust as necessary
 
@@ -223,7 +223,10 @@ function clearChatMessages() {
   }
 }
 
-  
+function generateRandomUserId() {
+  const randomNumber = Math.floor(Math.random() * 1000000); // Generates a number from 0 to 999999
+  return `noidfound${randomNumber.toString().padStart(6, '0')}`; // Ensures 6 digits
+} 
   
 
 
