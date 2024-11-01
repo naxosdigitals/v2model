@@ -177,7 +177,8 @@ function renderChatHistory(chatHistory) {
 // Listen for messages from the parent or other origins
 window.addEventListener("message", (event) => {
   // Check if the event origin is trusted
-  if (!event.origin.includes(config.origin)) return;
+  if (!config.origin.some(allowedOrigin => event.origin.includes(allowedOrigin))) return;
+
 
   const { setUserId, type, chatHistory } = event.data;
 
