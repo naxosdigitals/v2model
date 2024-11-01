@@ -185,6 +185,7 @@ window.addEventListener("message", (event) => {
   if (setUserId) {
     console.log("Received setUserId:", setUserId);
     userId = setUserId; // Update userId dynamically
+    window.location.reload();
   }
 
   // Handle setting chat history
