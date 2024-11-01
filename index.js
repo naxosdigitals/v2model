@@ -38,7 +38,7 @@ async function sendMessage() {
   };
 
   // Post the user message back to the parent
-  window.parent.postMessage({ type: "newMessage", turn: userTurn }, "*");
+  window.parent.postMessage({ type: "newMessage", turn: userTurn, userId: userId }, "*");
   console.log("User message sent to parent:", userTurn);
 
   input.value = "";
@@ -108,7 +108,7 @@ async function sendMessage() {
       };
 
       // Post the bot message back to the parent
-      window.parent.postMessage({ type: "newMessage", turn: botTurn }, "*");
+      window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
       console.log("Bot message sent to parent:", botTurn);
 
   } catch (error) {
