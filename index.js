@@ -39,7 +39,7 @@ async function sendMessage() {
 
   // Post the user message back to the parent
   window.parent.postMessage({ type: "newMessage", turn: userTurn, userId: userId }, "*");
-  console.log("User message sent to parent:", userTurn);
+  //console.log("User message sent to parent:", userTurn);
 
   input.value = "";
   sendButton.style.display = "none";
@@ -109,7 +109,7 @@ async function sendMessage() {
 
       // Post the bot message back to the parent
       window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
-      console.log("Bot message sent to parent:", botTurn);
+      //console.log("Bot message sent to parent:", botTurn);
 
   } catch (error) {
       console.error("Error fetching bot response:", error);
@@ -184,20 +184,20 @@ window.addEventListener("message", (event) => {
 
   // Handle setting user ID
   if (setUserId) {
-    console.log("Received setUserId:", setUserId);
+    //console.log("Received setUserId:", setUserId);
     userId = setUserId; // Update userId dynamically
     
   }
 
   // Handle setting chat history
   if (type === 'setChatHistory' && Array.isArray(chatHistory)) {
-    console.log("Received chat history:", chatHistory);
+    //console.log("Received chat history:", chatHistory);
     renderChatHistory(chatHistory); // Render the received chat history
   }
 
   // Handle clearing chat history
   if (type === 'clearChatHistory') {
-    console.log("Received clearChatHistory message");
+    //console.log("Received clearChatHistory message");
     clearChatMessages(); // Call function to clear chat history
   }
 });
@@ -207,7 +207,7 @@ function clearChatMessages() {
   const messagesDiv = document.getElementById("messages");
   if (messagesDiv) {
     messagesDiv.innerHTML = ''; // Clear all chat messages
-    console.log("Chat history cleared in iframe");
+    //console.log("Chat history cleared in iframe");
   }
 }
 
