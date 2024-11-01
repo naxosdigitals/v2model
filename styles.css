@@ -51,10 +51,11 @@
     background: #ffffff;
     outline: 1px solid #000080;;
     color: #000000e0 !important;
-    align-self: flex-start;
+    align-self: center;
     border-top-left-radius: 0;
     font-weight: 500;
-    text-align: left; /* Ensures left alignment */
+    
+     /* Ensures left alignment */
 }
   
 /* Bold text inside bot messages */
@@ -138,11 +139,7 @@ textarea#message-input {
     margin:10px;
     box-sizing: border-box;
 }
-input#message-input::placeholder {
-    color: #666;
-    font-size: 16px;
-    opacity: 1;
-}
+
 /* Send button styling */
 /* Send button styling */
 /* Send button styling */
