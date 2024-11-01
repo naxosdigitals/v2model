@@ -125,7 +125,7 @@
 }
 
 /* Input field styling */
-input {
+textarea#message-input {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -136,8 +136,13 @@ input {
     margin-right: 10px;
     padding-left: 15px;
     margin:10px;
+    box-sizing: border-box;
 }
-
+input#message-input::placeholder {
+    color: #666;
+    font-size: 16px;
+    opacity: 1;
+}
 /* Send button styling */
 /* Send button styling */
 /* Send button styling */

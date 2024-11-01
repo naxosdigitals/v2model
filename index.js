@@ -11,16 +11,25 @@ let userId = "1234"; // Default value if not received from the parent
 
 const currentProjectId = localStorage.getItem('currentProjectId'); // Adjust as necessary
 
-document.getElementById("message-input").addEventListener("keydown", function (event) {
-  if (event.key === "Enter") {
-    event.preventDefault();
+input.addEventListener("input", () => {
+  sendButton.style.display = input.value.trim() ? "flex" : "none";
+  autoResize(); // Adjust height on input
+});
+
+input.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault(); // Prevents new line if Enter is pressed without Shift
     sendMessage();
   }
 });
 
-input.addEventListener("input", () => {
-  sendButton.style.display = input.value.trim() ? "flex" : "none";
-});
+input.addEventListener("input", autoResize);
+
+// Adjust the height of the textarea to fit content
+function autoResize() {
+  input.style.height = 'auto'; // Reset height
+  input.style.height = input.scrollHeight + 'px'; // Set to scrollHeight to expand
+}
 
 async function sendMessage() {
   const userMessage = input.value.trim();
@@ -43,6 +52,8 @@ async function sendMessage() {
 
   input.value = "";
   sendButton.style.display = "none";
+  input.style.height = 'auto'; // Reset height after sending
+  sendButton.style.display = "none";
 
   const typingIndicator = document.createElement("div");
   typingIndicator.className = "message bot-message typing-indicator";
@@ -50,6 +61,7 @@ async function sendMessage() {
   messagesDiv.appendChild(typingIndicator);
 
   let botMessage = "";
+
 
   try {
       const response = await fetch(config.fetchurl, {
