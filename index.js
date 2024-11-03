@@ -44,9 +44,11 @@ async function sendMessage() {
 
   // Construct the message as a single concatenated string with a marker for the image
   let payloadMessage = userMessage;
+  let entity = "";
 // Prepend /vision if there is an image in the preview
 if (previewImage.src && document.getElementById("image-preview").style.display === "block") {
-  payloadMessage = `/vision ` + payloadMessage; // Prepend /vision to the user message
+  payloadMessage = payloadMessage;
+  entity = '/vision' // Prepend /vision to the user message
 }
 
 
@@ -91,7 +93,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
-        message: payloadMessage,
+        message: `${entity}, ${payloadMessage}`,
         userId: userId,
         projectId: config.projectid
       })
@@ -104,6 +106,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
     sendButton.style.display = "none";
     input.style.height = 'auto';
 
+    entity = "";
     let botMessage = "";
 
     const reader = response.body?.getReader();
