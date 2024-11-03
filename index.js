@@ -217,29 +217,25 @@ window.addEventListener("message", (event) => {
   // Check if the event origin is trusted
   if (!config.origin.some(allowedOrigin => event.origin.includes(allowedOrigin))) return;
 
-  // Rename setUserId to avoid conflict with the function
-  const { setUserId: receivedUserId, type, chatHistory } = event.data;
+
+  const { setUserId, type, chatHistory } = event.data;
 
   // Handle setting user ID
-  if (receivedUserId) {
-    console.log("Received setUserId:", receivedUserId);
-    userId = receivedUserId; // Update userId dynamically
+  if (setUserId) {
+    //console.log("Received setUserId:", setUserId);
+    userId = setUserId; // Update userId dynamically
     
-    // Call the setUserId function if it's defined
-    if (typeof setUserId === "function") {
-      setUserId(userId);
-    } else {
-      console.warn("setUserId function is not defined.");
-    }
   }
 
   // Handle setting chat history
   if (type === 'setChatHistory' && Array.isArray(chatHistory)) {
+    //console.log("Received chat history:", chatHistory);
     renderChatHistory(chatHistory); // Render the received chat history
   }
 
   // Handle clearing chat history
   if (type === 'clearChatHistory') {
+    //console.log("Received clearChatHistory message");
     clearChatMessages(); // Call function to clear chat history
   }
 });
