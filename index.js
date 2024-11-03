@@ -240,30 +240,36 @@ window.addEventListener("message", (event) => {
   // Check if the event origin is trusted
   if (!config.origin.some(allowedOrigin => event.origin.includes(allowedOrigin))) return;
 
-
-  const { setUserId, type, chatHistory } = event.data;
+  const { setUserId, type, chatHistory, imageUrl } = event.data;
 
   // Handle setting user ID
   if (setUserId) {
-    //console.log("Received setUserId:", setUserId);
     userId = setUserId;
-    setuseriDparent(setUserId);
-     // Update userId dynamically
-    
+    setuseriDparent(setUserId); // Update userId dynamically
   }
 
   // Handle setting chat history
   if (type === 'setChatHistory' && Array.isArray(chatHistory)) {
-    //console.log("Received chat history:", chatHistory);
     renderChatHistory(chatHistory); // Render the received chat history
   }
 
   // Handle clearing chat history
   if (type === 'clearChatHistory') {
-    //console.log("Received clearChatHistory message");
     clearChatMessages(); // Call function to clear chat history
   }
+
+  // Handle image URL
+  if (type === 'imageUrl' && imageUrl) {
+    console.log("Received image URL:", imageUrl);
+    
+    // Display or process the image URL as needed
+    const img = document.getElementById('receivedImage');
+    if (img) {
+      img.src = imageUrl; // Set the image source to the received URL
+    }
+  }
 });
+
 
 function setuseriDparent(userId) {
   setUserId(userId);
