@@ -7,6 +7,9 @@ export function formatText(text) {
      const imageRegex = /(https?:\/\/(?:firebasestorage\.googleapis\.com\/\S+alt=media\S*|\S+\.(?:jpg|jpeg|png|gif)))/gi;
     formattedText = formattedText.replace(imageRegex, (url) => `<img src="${url}" alt="Image" style="max-width: 100%; height: auto;" />`);
 
+    const base64ImageRegex = /(data:image\/(?:png|jpeg|gif);base64,[A-Za-z0-9+/=]+)/gi;
+    formattedText = formattedText.replace(base64ImageRegex, (url) => `<img src="${url}" alt="Base64 Image" style="max-width: 100%; height: auto;" />`);
+
     // Apply **bold** formatting
     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 

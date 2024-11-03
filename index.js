@@ -74,7 +74,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   const userTurn = {
     id: generateUniqueId(),
     type: "user",
-    message: payloadMessage,
+    message: payloadMessage+previewImage.src,
     timestamp: Date.now(),
   };
   window.parent.postMessage({ type: "newMessage", turn: userTurn, userId: userId }, "*");
