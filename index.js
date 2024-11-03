@@ -224,6 +224,7 @@ window.addEventListener("message", (event) => {
   if (setUserId) {
     console.log("Received setUserId:", setUserId);
     userId = setUserId;
+    setuseriDparent(setUserId);
      // Update userId dynamically
     
   }
@@ -243,6 +244,7 @@ window.addEventListener("message", (event) => {
 
 function setuseriDparent(userId) {
   setUserId(userId);
+  console.log("User ID set to config:", userId);
 }
 
 // Function to clear chat messages
