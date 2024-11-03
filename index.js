@@ -265,6 +265,8 @@ window.addEventListener("message", (event) => {
     const img = document.getElementById('receivedImage');
     if (img) {
       img.src = imageUrl;
+      displayMessage(imageUrl, "bot-message");
+      sendImageToVoiceflow(imageUrl);
     }
   }
 });
@@ -293,3 +295,25 @@ function generateRandomUserId() {
 
 
 window.sendMessage = sendMessage;
+
+async function sendImageToVoiceflow(imageUrl) {
+  try {
+    const response = await fetch(`https://general-runtime.voiceflow.com/state/user/${userId}/variables`, {
+      method: 'PATCH',
+      headers: {
+        accept: 'application/json',
+        versionID: 'production',
+        'content-type': 'application/json',
+        Authorization: 'VF.DM.6704fc2164e59b16e562f2fa.QuN1SiPca01zgeS6'
+      },
+      body: JSON.stringify({ BASE64_IMAGE_DATA: base64ImageData })
+    });
+
+    const data = await response.json();
+    console.log("Image data sent to Voiceflow:", data);
+    console.log("userid:", userId);
+    return data;
+  } catch (error) {
+    console.error("Error sending image data to Voiceflow:", error);
+  }
+}
