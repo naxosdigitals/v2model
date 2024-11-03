@@ -142,8 +142,8 @@ function resizeImage(file, maxWidth, maxHeight) {
       });
   
       const data = await response.json();
-      //console.log("Image data sent to Voiceflow:", data);
-      //console.log("userid:", userId);
+      console.log("Image data sent to Voiceflow:", data);
+      console.log("userid:", userId);
       return data;
     } catch (error) {
       console.error("Error sending image data to Voiceflow:", error);
