@@ -239,7 +239,7 @@ function renderChatHistory(chatHistory) {
 window.addEventListener("message", (event) => {
   // Check if the event origin is trusted
   if (!config.origin.some(allowedOrigin => event.origin.includes(allowedOrigin))) return;
-
+  console.log("Iframe: Received message event", event);
   const { setUserId, type, chatHistory, imageUrl } = event.data;
 
   // Handle setting user ID
@@ -259,13 +259,12 @@ window.addEventListener("message", (event) => {
   }
 
   // Handle image URL
-  if (type === 'imageUrl') {
-    console.log("Received image URL:", imageUrl);
+  if (type === 'imageUrl' && imageUrl) {
+    console.log("Iframe: Received image URL:", imageUrl);
     
-    // Display or process the image URL as needed
     const img = document.getElementById('receivedImage');
     if (img) {
-      img.src = imageUrl; // Set the image source to the received URL
+      img.src = imageUrl;
     }
   }
 });
