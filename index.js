@@ -259,7 +259,7 @@ window.addEventListener("message", (event) => {
   }
 
   // Handle image URL
-  if (type === 'imageUrl' && imageUrl) {
+  if (type === 'imageUrl') {
     console.log("Received image URL:", imageUrl);
     
     // Display or process the image URL as needed
