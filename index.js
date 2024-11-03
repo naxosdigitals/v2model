@@ -69,7 +69,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   clearImagePreview();
 
   // Log the combined message string for debugging
-  console.log("Payload message to be sent:", payloadMessage);
+  //console.log("Payload message to be sent:", payloadMessage);
 
   // Add typing indicator before making the request
   const typingIndicator = document.createElement("div");
