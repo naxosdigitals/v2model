@@ -261,12 +261,11 @@ window.addEventListener("message", (event) => {
   // Handle image URL
   if (type === 'imageUrl' && imageUrl) {
     console.log("Iframe: Received image URL:", imageUrl);
-    
+    displayMessage(imageUrl, "bot-message");
     const img = document.getElementById('receivedImage');
     if (img) {
       img.src = imageUrl;
-      displayMessage(imageUrl, "bot-message");
-      sendImageToVoiceflow(imageUrl);
+      
     }
   }
 });
