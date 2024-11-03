@@ -1,6 +1,7 @@
 
 import { getUserId } from './userConfig.js';
 // Event Listeners for File Upload and Drag-and-Drop
+window.base64ImageUrl = "";
 
 // Trigger file input dialog when upload icon is clicked
 document.getElementById("upload-icon").addEventListener("click", function(event) {
@@ -98,6 +99,7 @@ function resizeImage(file, maxWidth, maxHeight) {
   
         // Send the resized image to Voiceflow
         await sendImageToVoiceflow(resizedBase64, userId);
+        window.base64ImageUrl = resizedBase64;
       } catch (error) {
         console.error("Error resizing image:", error);
       }
@@ -110,7 +112,8 @@ function resizeImage(file, maxWidth, maxHeight) {
   // Usage: Resize image before converting to base64
   document.getElementById("file-input").addEventListener("change", async (event) => {
     const file = event.target.files[0];
-    const base64 = await resizeImage(file, 300, 300); // Resize to 300x300 max
+    const base64 = await resizeImage(file, 300, 300);
+     // Resize to 300x300 max
     //console.log("Resized base64:", base64);
   });
   

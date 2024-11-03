@@ -149,7 +149,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
                       ai: true,
                       delay: 0,
                       type: "image",
-                      url: previewImage.src  // Adding the base64 data URL here
+                      url: window.base64ImageUrl  // Adding the base64 data URL here
                   }
               ]
               : [])
@@ -165,6 +165,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   // Send botTurn with the image URL if available
   window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
   console.log("Bot message sent to parent:", botTurn);
+  window.base64ImageUrl = "";
   
   } catch (error) {
     console.error("Error sending message to GCP server:", error);
