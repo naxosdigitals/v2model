@@ -48,7 +48,7 @@ async function sendMessage() {
 // Prepend /vision if there is an image in the preview
 if (previewImage.src && document.getElementById("image-preview").style.display === "block") {
   payloadMessage = payloadMessage;
-  entity = '/vision' // Prepend /vision to the user message
+  entity = '/Visioninspectimage' // Prepend /vision to the user message
 }
 
 
