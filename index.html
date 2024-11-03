@@ -1,41 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chat Widget</title>
-        <link rel="stylesheet" href="styles.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        
-        <!-- Configure MathJax for manual typesetting -->
-        <script>
-          window.MathJax = {
-            tex: {
-              inlineMath: [['$', '$'], ['\\(', '\\)']],
-              displayMath: [['\\[', '\\]']]
-            },
-            startup: {
-              typeset: false // Disable automatic typesetting
-            }
-          };
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-      </head>
-      
-      <body>
-        <div id="chat-container">
-          <div id="messages"></div>
-          <div id="input-container">
-            <textarea id="message-input" placeholder="Type a message..." autocomplete="off" rows="1" style="resize: none;"></textarea>
-            <button id="send-button" onclick="sendMessage()">
-              <i class="fas fa-arrow-up"></i>
-            </button>
-          </div>
-        </div>
-      
-        <!-- Import formatting and main chat scripts -->
-        <script src="formatting.js" type="module"></script>
-        <script src="index.js" type="module"></script>
-      </body>
-      
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Widget</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Configure MathJax for manual typesetting -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']]
+        },
+        startup: {
+          typeset: false // Disable automatic typesetting
+        }
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  </head>
+  
+  <body>
+    <div id="chat-container">
+      <div id="messages"></div>
+    
+      <!-- Image preview section with close button -->
+      <div id="image-preview" style="display: none;">
+        <span class="close-btn" onclick="clearImagePreview()">×</span>
+        <img id="preview-image" src="" alt="Image Preview">
+      </div>
+    
+      <!-- Input container with upload icon and input field -->
+      <div id="input-container">
+        <button id="upload-icon">
+          <i class="fas fa-upload"></i>
+        </button>
+        <textarea id="message-input" placeholder="Type a message..." autocomplete="off" rows="1" style="resize: none;"></textarea>
+        <button id="send-button" onclick="sendMessage()">
+          <i class="fas fa-arrow-up"></i>
+        </button>
+      </div>
+    
+      <!-- Hidden file input for image upload -->
+      <input type="file" id="file-input" accept="image/*" style="display: none;">
+    </div>
+    </div>
+    
+
+    <!-- Import main scripts -->
+    <script src="formatting.js" type="module"></script>
+    <script src="index.js" type="module"></script>
+    <script src="drag-and-drop.js" type="module"></script> 
+    
+    <!-- Import the drag-and-drop functionality --><!-- Import the new file here -->
+  </body>
 </html>

@@ -1,13 +1,16 @@
 import { formatText, queueMathJaxTypeset } from './formatting.js';
 import { config } from './config.js';
+import { setUserId } from './userConfig.js';
 
 
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("message-input");
 const sendButton = document.getElementById("send-button");
 
+
 // Initialize userId variable
-let userId = generateRandomUserId(); // Default value if not received from the parent
+let userId = generateRandomUserId(); // Default ID if not received
+setUserId(userId); // Default value if not received from the parent
 
 const currentProjectId = localStorage.getItem('currentProjectId'); // Adjust as necessary
 
@@ -33,101 +36,124 @@ function autoResize() {
 
 async function sendMessage() {
   const userMessage = input.value.trim();
-  if (!userMessage) return;
+  const previewImage = document.getElementById("preview-image");
+  const messagesDiv = document.getElementById("messages");
 
-  // Display and format user message
-  displayMessage(userMessage, "user-message");
+  // If there's no text and no image, exit the function
+  if (!userMessage && !(previewImage.src && document.getElementById("image-preview").style.display === "block")) return;
 
-  // Construct the user message in the specific format
-  const userTurn = {
-    id: generateUniqueId(), // Function to generate unique ID
-    type: "user",
-    message: userMessage,
-    timestamp: Date.now(),
-  };
+  // Construct the message as a single concatenated string with a marker for the image
+  let payloadMessage = userMessage;
+// Prepend /vision if there is an image in the preview
+if (previewImage.src && document.getElementById("image-preview").style.display === "block") {
+  payloadMessage = `/vision ` + payloadMessage; // Prepend /vision to the user message
+}
 
-  // Post the user message back to the parent
-  window.parent.postMessage({ type: "newMessage", turn: userTurn, userId: userId }, "*");
-  //console.log("User message sent to parent:", userTurn);
 
-  input.value = "";
-  sendButton.style.display = "none";
-  input.style.height = 'auto'; // Reset height after sending
-  sendButton.style.display = "none";
+  // Display the user message as text if there is any
+  if (userMessage) {
+    displayMessage(userMessage, "user-message");
+    input.value = ""; // Clear text input after displaying
+  }
 
+  // Display the image in the chat as part of the user's message, if there's an image
+  if (previewImage.src && document.getElementById("image-preview").style.display === "block") {
+    const imageMessageDiv = document.createElement("div");
+    imageMessageDiv.className = "message user-message";
+    imageMessageDiv.innerHTML = `<img src="${previewImage.src}" alt="User uploaded image" style="max-width: 150px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">`;
+    messagesDiv.appendChild(imageMessageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // Clear the image preview after displaying it in the chat
+  clearImagePreview();
+
+  // Log the combined message string for debugging
+  console.log("Payload message to be sent:", payloadMessage);
+
+  // Add typing indicator before making the request
   const typingIndicator = document.createElement("div");
   typingIndicator.className = "message bot-message typing-indicator";
   typingIndicator.innerHTML = `<div class="typing-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`;
   messagesDiv.appendChild(typingIndicator);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-  let botMessage = "";
-
-
+  // Send the concatenated message to the GCP server as a single string
   try {
-      const response = await fetch(config.fetchurl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            message: userMessage, 
-            userId: userId,
-            projectId: config.projectid
-          })
-      });
+    const response = await fetch(config.fetchurl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        message: payloadMessage,
+        userId: userId,
+        projectId: config.projectid
+      })
+    });
 
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("Failed to receive a response.");
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-      const decoder = new TextDecoder("utf-8");
+    // Clear the input after sending
+    input.value = "";
+    sendButton.style.display = "none";
+    input.style.height = 'auto';
 
-      while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+    let botMessage = "";
 
-          const chunk = decoder.decode(value, { stream: true });
-          botMessage += chunk;
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder("utf-8");
 
-          typingIndicator.innerHTML = formatText(botMessage);
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-          queueMathJaxTypeset();
-      }
+      const chunk = decoder.decode(value, { stream: true });
+      botMessage += chunk;
 
-      typingIndicator.remove();
-      displayMessage(botMessage, "bot-message");
+      typingIndicator.innerHTML = formatText(botMessage);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-      // Construct the bot message in the specific format
-      const botTurn = {
-          id: generateUniqueId(),
-          type: "system",
-          timestamp: Date.now(),
-          messages: [
-              {
-                  ai: true,
-                  delay: 0,
-                  text: [
-                      {
-                          children: [{ text: botMessage }],
-                      },
-                  ],
-              },
+      queueMathJaxTypeset();
+    }
+
+    typingIndicator.remove();
+    displayMessage(botMessage, "bot-message");
+
+    const botTurn = {
+      id: generateUniqueId(),
+      type: "system",
+      timestamp: Date.now(),
+      messages: [
+        {
+          ai: true,
+          delay: 0,
+          text: [
+            {
+              children: [{ text: botMessage }],
+            },
           ],
-          actions: [
-              {
-                  name: "Tell me More",
-                  request: { type: "path-25ak43jsd", payload: {} },
-              },
-          ],
-      };
+        },
+      ],
+      actions: [
+        {
+          name: "Tell me More",
+          request: { type: "path-25ak43jsd", payload: {} },
+        },
+      ],
+    };
 
-      // Post the bot message back to the parent
-      window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
-      //console.log("Bot message sent to parent:", botTurn);
+    window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
+    console.log("Bot message sent to parent:", botTurn);
 
   } catch (error) {
-      console.error("Error fetching bot response:", error);
-      typingIndicator.innerHTML = "Error: Unable to process message.";
+    console.error("Error sending message to GCP server:", error);
+    typingIndicator.innerHTML = "Error: Unable to process message.";
   }
 }
+
+
+
+
+
 
 // Helper function to generate unique IDs for each message
 function generateUniqueId() {
@@ -197,7 +223,8 @@ window.addEventListener("message", (event) => {
   // Handle setting user ID
   if (setUserId) {
     //console.log("Received setUserId:", setUserId);
-    userId = setUserId; // Update userId dynamically
+    userId = setUserId;
+    setUserId(userId); // Update userId dynamically
     
   }
 
@@ -227,7 +254,8 @@ function generateRandomUserId() {
   const randomNumber = Math.floor(Math.random() * 1000000); // Generates a number from 0 to 999999
   return `noidfound${randomNumber.toString().padStart(6, '0')}`; // Ensures 6 digits
 } 
-  
+  // Add event listeners for drag-and-drop and file upload
+
 
 
 window.sendMessage = sendMessage;

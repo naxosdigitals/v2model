@@ -41,12 +41,14 @@ async function callApi(action: Action, res: Response, userId: string, projectId:
   const parser = createParser((event: ParsedEvent | ReconnectInterval) => {
     if ("data" in event) {
       const trace = JSON.parse(event.data);
+      console.log("voiceflow:", trace);
       switch (trace.type) {
         case "speak":
         case "text":
           res.write(trace.payload.message);
           break;
         case "completion":
+          console.log("Voiceflow Completion Event:", trace.payload.content);
           if (trace.payload.state === "content") {
             res.write(trace.payload.content);
           }
@@ -81,3 +83,4 @@ const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+

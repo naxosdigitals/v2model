@@ -11,12 +11,14 @@ export function formatText(text) {
     formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     // Apply heading formatting (from # to ######)
-    formattedText = formattedText.replace(/^###### (.*)$/gm, "<h6>$1</h6>")
-                                 .replace(/^##### (.*)$/gm, "<h5>$1</h5>")
-                                 .replace(/^#### (.*)$/gm, "<h4>$1</h4>")
-                                 .replace(/^### (.*)$/gm, "<h3>$1</h3>")
-                                 .replace(/^## (.*)$/gm, "<h2>$1</h2>")
-                                 .replace(/^# (.*)$/gm, "<h1>$1</h1>");
+    // Apply custom heading formatting with spans to avoid default heading styles
+formattedText = formattedText.replace(/^###### (.*)$/gm, "<span class='heading h6'>$1</span>")
+.replace(/^##### (.*)$/gm, "<span class='heading h5'>$1</span>")
+.replace(/^#### (.*)$/gm, "<span class='heading h4'>$1</span>")
+.replace(/^### (.*)$/gm, "<span class='heading h3'>$1</span>")
+.replace(/^## (.*)$/gm, "<span class='heading h2'>$1</span>")
+.replace(/^# (.*)$/gm, "<span class='heading h1'>$1</span>");
+
 
     // Detect and format code blocks using ``` (triple backticks) as a delimiter, without syntax highlighting
     formattedText = formattedText.replace(/```(\w*)\n([\s\S]*?)```/g, (match, language, code) => {
