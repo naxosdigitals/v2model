@@ -74,7 +74,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   const userTurn = {
     id: generateUniqueId(),
     type: "user",
-    message: payloadMessage+previewImage.src,
+    message: payloadMessage,
     timestamp: Date.now(),
   };
   window.parent.postMessage({ type: "newMessage", turn: userTurn, userId: userId }, "*");
@@ -133,27 +133,39 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
       type: "system",
       timestamp: Date.now(),
       messages: [
-        {
-          ai: true,
-          delay: 0,
-          text: [
-            {
-              children: [{ text: botMessage }],
-            },
-          ],
-        },
+          {
+              ai: true,
+              delay: 0,
+              text: [
+                  {
+                      children: [{ text: botMessage }],
+                  },
+              ],
+          },
+          // Add the base64 image URL if it exists
+          ...(previewImage.src && document.getElementById("image-preview").style.display === "block"
+              ? [
+                  {
+                      ai: true,
+                      delay: 0,
+                      type: "image",
+                      url: previewImage.src  // Adding the base64 data URL here
+                  }
+              ]
+              : [])
       ],
       actions: [
-        {
-          name: "Tell me More",
-          request: { type: "path-25ak43jsd", payload: {} },
-        },
+          {
+              name: "Tell me More",
+              request: { type: "path-25ak43jsd", payload: {} },
+          },
       ],
-    };
-
-    window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
-    console.log("Bot message sent to parent:", botTurn);
-
+  };
+  
+  // Send botTurn with the image URL if available
+  window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
+  console.log("Bot message sent to parent:", botTurn);
+  
   } catch (error) {
     console.error("Error sending message to GCP server:", error);
     typingIndicator.innerHTML = "Error: Unable to process message.";
