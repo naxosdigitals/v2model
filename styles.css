@@ -361,3 +361,39 @@ textarea#message-input {
     color: #9cdcfe; /* Light blue for attributes */
 }
 
+/* Styling for iframe headings */
+.iframe-heading.h1 {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.iframe-heading.h2 {
+    font-size: 1.75em;
+    font-weight: bold;
+    color: #444;
+}
+
+.iframe-heading.h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #555;
+}
+
+.iframe-heading.h4 {
+    font-size: 1.25em;
+    font-weight: bold;
+    color: #666;
+}
+
+.iframe-heading.h5 {
+    font-size: 1em;
+    font-weight: bold;
+    color: #777;
+}
+
+.iframe-heading.h6 {
+    font-size: 0.875em;
+    font-weight: bold;
+    color: #888;
+}

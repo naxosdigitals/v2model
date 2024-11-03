@@ -12,12 +12,13 @@ export function formatText(text) {
 
     // Apply heading formatting (from # to ######)
     // Apply custom heading formatting with spans to avoid default heading styles
-formattedText = formattedText.replace(/^###### (.*)$/gm, "<span class='heading h6'>$1</span>")
-.replace(/^##### (.*)$/gm, "<span class='heading h5'>$1</span>")
-.replace(/^#### (.*)$/gm, "<span class='heading h4'>$1</span>")
-.replace(/^### (.*)$/gm, "<span class='heading h3'>$1</span>")
-.replace(/^## (.*)$/gm, "<span class='heading h2'>$1</span>")
-.replace(/^# (.*)$/gm, "<span class='heading h1'>$1</span>");
+    formattedText = formattedText.replace(/^###### (.*)$/gm, "<span class='iframe-heading h6'>$1</span>")
+    .replace(/^##### (.*)$/gm, "<span class='iframe-heading h5'>$1</span>")
+    .replace(/^#### (.*)$/gm, "<span class='iframe-heading h4'>$1</span>")
+    .replace(/^### (.*)$/gm, "<span class='iframe-heading h3'>$1</span>")
+    .replace(/^## (.*)$/gm, "<span class='iframe-heading h2'>$1</span>")
+    .replace(/^# (.*)$/gm, "<span class='iframe-heading h1'>$1</span>");
+
 
 
     // Detect and format code blocks using ``` (triple backticks) as a delimiter, without syntax highlighting
