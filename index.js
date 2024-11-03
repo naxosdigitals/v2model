@@ -222,7 +222,7 @@ window.addEventListener("message", (event) => {
 
   // Handle setting user ID
   if (setUserId) {
-    //console.log("Received setUserId:", setUserId);
+    console.log("Received setUserId:", setUserId);
     userId = setUserId;
     setUserId(userId); // Update userId dynamically
     
