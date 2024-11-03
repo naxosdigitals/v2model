@@ -53,7 +53,8 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   // Display the user message as text if there is any
   if (userMessage) {
     displayMessage(userMessage, "user-message");
-    input.value = ""; // Clear text input after displaying
+    input.value = ""; 
+// Clear text input after displaying
   }
 
   // Display the image in the chat as part of the user's message, if there's an image
@@ -68,8 +69,14 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   // Clear the image preview after displaying it in the chat
   clearImagePreview();
 
-  // Log the combined message string for debugging
-  //console.log("Payload message to be sent:", payloadMessage);
+  const userTurn = {
+    id: generateUniqueId(),
+    type: "user",
+    message: payloadMessage,
+    timestamp: Date.now(),
+  };
+  window.parent.postMessage({ type: "newMessage", turn: userTurn, userId: userId }, "*");
+
 
   // Add typing indicator before making the request
   const typingIndicator = document.createElement("div");
