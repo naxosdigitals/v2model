@@ -32,10 +32,10 @@ document.getElementById("upload-icon").addEventListener("click", function(event)
   function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
-      console.log("File selected:", file); // Debugging log
+      //console.log("File selected:", file); // Debugging log
       processFile(file); // Process the file to display preview
     } else {
-      console.log("No file selected");
+      //console.log("No file selected");
     }
   }
   
@@ -111,13 +111,13 @@ function resizeImage(file, maxWidth, maxHeight) {
   document.getElementById("file-input").addEventListener("change", async (event) => {
     const file = event.target.files[0];
     const base64 = await resizeImage(file, 300, 300); // Resize to 300x300 max
-    console.log("Resized base64:", base64);
+    //console.log("Resized base64:", base64);
   });
   
   // Function to Clear the Image Preview
   
   function clearImagePreview() {
-    console.log("Clearing image preview..."); // Debugging log
+    //console.log("Clearing image preview..."); // Debugging log
     const imagePreview = document.getElementById("image-preview");
     const previewImage = document.getElementById("preview-image");
   
