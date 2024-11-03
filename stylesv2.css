@@ -363,37 +363,37 @@ textarea#message-input {
 
 /* Styling for iframe headings */
 .iframe-heading.h1 {
-    font-size: 2em;
+    
     font-weight: bold;
     color: #000080;
 }
 
 .iframe-heading.h2 {
-    font-size: 1.75em;
+    
     font-weight: bold;
     color: #000080;
 }
 
 .iframe-heading.h3 {
-    font-size: 1.5em;
+    
     font-weight: bold;
     color: #000080;
 }
 
 .iframe-heading.h4 {
-    font-size: 1.25em;
+    
     font-weight: bold;
     color: #000080;
 }
 
 .iframe-heading.h5 {
-    font-size: 1em;
+    
     font-weight: bold;
     color: #000080;
 }
 
 .iframe-heading.h6 {
-    font-size: 0.875em;
+    
     font-weight: bold;
     color: #000080;
 }
