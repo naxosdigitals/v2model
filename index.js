@@ -258,6 +258,7 @@ window.addEventListener("message", (event) => {
   if (type === 'imageUrl' && imageUrl) {
     console.log("Iframe: Received image URL:", imageUrl);
     displayMessage(imageUrl, "bot-message");
+    sendImageToVoiceflow(imageUrl)
     const img = document.getElementById('receivedImage');
     if (img) {
       img.src = imageUrl;
@@ -301,7 +302,7 @@ async function sendImageToVoiceflow(imageUrl) {
         'content-type': 'application/json',
         Authorization: 'VF.DM.6704fc2164e59b16e562f2fa.QuN1SiPca01zgeS6'
       },
-      body: JSON.stringify({ BASE64_IMAGE_DATA: base64ImageData })
+      body: JSON.stringify({ BASE64_IMAGE_DATA: imageUrl })
     });
 
     const data = await response.json();
