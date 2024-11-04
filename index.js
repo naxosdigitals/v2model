@@ -1,7 +1,7 @@
 import { formatText, queueMathJaxTypeset } from './formatting.js';
 import { config } from './config.js';
 import { setUserId } from './userConfig.js';
-import { createBotTurn } from './Turnformatting.js';
+
 
 
 const messagesDiv = document.getElementById("messages");
@@ -52,6 +52,10 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   entity = '/Visioninspectimage' // Prepend /vision to the user message
 }
 
+if(imageUrl){
+  payloadMessage = payloadMessage;
+  entity = '/Visioninspectimage';
+}
 
   // Display the user message as text if there is any
   if (userMessage) {
@@ -260,7 +264,7 @@ window.addEventListener("message", (event) => {
     console.log("Iframe: Received image URL:", imageUrl);
     displayMessage(imageUrl, "bot-message");
     sendImageToVoiceflow(imageUrl)
-    createBotTurn(imageUrl);
+    createBotTurn(botMessage)
 
     const img = document.getElementById('receivedImage');
     if (img) {
@@ -315,4 +319,46 @@ async function sendImageToVoiceflow(imageUrl) {
   } catch (error) {
     console.error("Error sending image data to Voiceflow:", error);
   }
+}
+
+function createBotTurn(botMessage) {
+  const botTurn = {
+    id: generateUniqueId(),
+    type: "system",
+    timestamp: Date.now(),
+    messages: [
+      {
+        ai: true,
+        delay: 0,
+        text: [
+          {
+            children: [{ text: botMessage }],
+          },
+        ],
+      },
+      // Add the base64 image URL if it exists
+      ...(imageUrl
+        ? [
+            {
+              ai: true,
+              delay: 0,
+              type: "image",
+              url: imageUrl, // Using imageUrl parameter
+            },
+          ]
+        : []),
+    ],
+    actions: [
+      {
+        name: "Tell me More",
+        request: { type: "path-25ak43jsd", payload: {} },
+      },
+    ],
+  };
+
+  // Post the botTurn object to the parent window
+  window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
+  console.log("Bot message sent to parent:", botTurn);
+
+  return botTurn; // Return botTurn in case you need to use it elsewhere
 }
