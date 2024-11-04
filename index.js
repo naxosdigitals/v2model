@@ -52,11 +52,6 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   entity = '/Visioninspectimage' // Prepend /vision to the user message
 }
 
-if(imageUrl){
-  payloadMessage = payloadMessage;
-  entity = '/Visioninspectimage';
-}
-
   // Display the user message as text if there is any
   if (userMessage) {
     displayMessage(userMessage, "user-message");
