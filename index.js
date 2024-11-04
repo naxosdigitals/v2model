@@ -264,7 +264,7 @@ window.addEventListener("message", (event) => {
     console.log("Iframe: Received image URL:", imageUrl);
     displayMessage(imageUrl, "bot-message");
     sendImageToVoiceflow(imageUrl);
-    createBotTurn(botMessage);
+    createBotTurn(imageUrl);
 
     const img = document.getElementById('receivedImage');
     if (img) {
