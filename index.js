@@ -263,7 +263,7 @@ window.addEventListener("message", (event) => {
   if (type === 'imageUrl' && imageUrl) {
     console.log("Iframe: Received image URL:", imageUrl);
     displayMessage(imageUrl, "bot-message");
-    sendImageToVoiceflow(imageUrl);
+    sendImageToVoiceflow(imageUrl,setUserId);
     createBotTurn(imageUrl);
 
     const img = document.getElementById('receivedImage');
@@ -299,7 +299,7 @@ function generateRandomUserId() {
 
 window.sendMessage = sendMessage;
 
-async function sendImageToVoiceflow(imageUrl) {
+async function sendImageToVoiceflow(imageUrl,userId) {
   try {
     const response = await fetch(`https://general-runtime.voiceflow.com/state/user/${userId}/variables`, {
       method: 'PATCH',
@@ -343,7 +343,7 @@ function createBotTurn(botMessage) {
               ai: true,
               delay: 0,
               type: "image",
-              url: imageUrl, // Using imageUrl parameter
+              url: "imageUrl", // Using imageUrl parameter
             },
           ]
         : []),
