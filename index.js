@@ -1,6 +1,7 @@
 import { formatText, queueMathJaxTypeset } from './formatting.js';
 import { config } from './config.js';
 import { setUserId } from './userConfig.js';
+import { createBotTurn } from './Turnformatting.js';
 
 
 const messagesDiv = document.getElementById("messages");
@@ -259,6 +260,8 @@ window.addEventListener("message", (event) => {
     console.log("Iframe: Received image URL:", imageUrl);
     displayMessage(imageUrl, "bot-message");
     sendImageToVoiceflow(imageUrl)
+    createBotTurn(imageUrl);
+
     const img = document.getElementById('receivedImage');
     if (img) {
       img.src = imageUrl;
