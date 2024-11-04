@@ -262,8 +262,8 @@ window.addEventListener("message", (event) => {
   // Handle image URL
   if (type === 'imageUrl' && imageUrl) {
     console.log("Iframe: Received image URL:", imageUrl);
-    displayMessage(imageUrl, "bot-message");
-  
+    //displayMessage(imageUrl, "bot-message");
+    //sendImageToVoiceflow(imageUrl);
     
 
     const img = document.getElementById('receivedImage');
@@ -299,7 +299,7 @@ function generateRandomUserId() {
 
 window.sendMessage = sendMessage;
 
-async function sendImageToVoiceflow(imageUrl,userId) {
+async function sendImageToVoiceflow(imageUrl) {
   try {
     const response = await fetch(`https://general-runtime.voiceflow.com/state/user/${userId}/variables`, {
       method: 'PATCH',
@@ -321,44 +321,3 @@ async function sendImageToVoiceflow(imageUrl,userId) {
   }
 }
 
-function createBotTurn(botMessage) {
-  const botTurn = {
-    id: generateUniqueId(),
-    type: "system",
-    timestamp: Date.now(),
-    messages: [
-      {
-        ai: true,
-        delay: 0,
-        text: [
-          {
-            children: [{ text: botMessage }],
-          },
-        ],
-      },
-      // Add the base64 image URL if it exists
-      ...(imageUrl
-        ? [
-            {
-              ai: true,
-              delay: 0,
-              type: "image",
-              url: "imageUrl", // Using imageUrl parameter
-            },
-          ]
-        : []),
-    ],
-    actions: [
-      {
-        name: "Tell me More",
-        request: { type: "path-25ak43jsd", payload: {} },
-      },
-    ],
-  };
-
-  // Post the botTurn object to the parent window
-  window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
-  console.log("Bot message sent to parent:", botTurn);
-
-  return botTurn; // Return botTurn in case you need to use it elsewhere
-}
