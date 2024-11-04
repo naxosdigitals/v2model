@@ -230,10 +230,6 @@ function renderChatHistory(chatHistory) {
         
 
 }
-
-  
-  
-
 // Listen for messages from the parent or other origins
 // Listen for messages from the parent or other origins
 window.addEventListener("message", (event) => {
