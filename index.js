@@ -164,7 +164,7 @@ if (previewImage.src && document.getElementById("image-preview").style.display =
   
   // Send botTurn with the image URL if available
   window.parent.postMessage({ type: "newMessage", turn: botTurn, userId: userId }, "*");
-  console.log("Bot message sent to parent:", botTurn);
+  //console.log("Bot message sent to parent:", botTurn);
   window.base64ImageUrl = "";
   
   } catch (error) {
@@ -235,7 +235,7 @@ function renderChatHistory(chatHistory) {
 window.addEventListener("message", (event) => {
   // Check if the event origin is trusted
   if (!config.origin.some(allowedOrigin => event.origin.includes(allowedOrigin))) return;
-  console.log("Iframe: Received message event", event);
+  //console.log("Iframe: Received message event", event);
   const { setUserId, type, chatHistory, imageUrl } = event.data;
 
   // Handle setting user ID
@@ -256,7 +256,7 @@ window.addEventListener("message", (event) => {
 
   // Handle image URL
   if (type === 'imageUrl' && imageUrl) {
-    console.log("Iframe: Received image URL:", imageUrl);
+    //console.log("Iframe: Received image URL:", imageUrl);
     //displayMessage(imageUrl, "bot-message");
     //sendImageToVoiceflow(imageUrl);
     
@@ -308,8 +308,8 @@ async function sendImageToVoiceflow(imageUrl) {
     });
 
     const data = await response.json();
-    console.log("Image data sent to Voiceflow:", data);
-    console.log("userid:", userId);
+    //console.log("Image data sent to Voiceflow:", data);
+    //console.log("userid:", userId);
     return data;
   } catch (error) {
     console.error("Error sending image data to Voiceflow:", error);
